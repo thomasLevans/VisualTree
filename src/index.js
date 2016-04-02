@@ -3,7 +3,7 @@ import Tree from './tree';
 
 d3.json('../dat/dat.json', (err, data) => {
   if (err) {
-    return console.error(err)
+    return console.error(err);
   }
 
   let tree = new Tree({data: data});
