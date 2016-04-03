@@ -24,10 +24,19 @@ The default config looks like:
 {
   data: new Map(),
   elem: 'body',
-  diameter: 750
+  diameter: 750,
+  singleLayer: false
 }
 ```
-When passing a config to the constructor you can omit any of the properties in favor of the defaults. If no data is passed in the config you can use `tree.push(myData)`
+When passing a config to the constructor you can omit any of the properties in favor of the defaults.
+
+### Config Properties
+- data -> The root node of the tree, see __Data__ for expected structure.
+- elem -> The DOM element to append the scalable vector graphic to.
+- diameter -> The size of the circle the radial tree will occupy.
+- singleLayer -> When true a leaf alias is created for every branch node and branch nodes will not be displayed.
+
+__Note:__ If no data is passed in the config you can use `tree.push(myData)`
 
 ## Data
 Currently the data can only be in a specific JSON structure of:
