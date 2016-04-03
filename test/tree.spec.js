@@ -54,4 +54,50 @@ describe('tree', () => {
     expect(t.diameter).to.equal(750);
   });
 
+  it('can expand by making all named nodes leaves', () => {
+    let data = {
+      'name': 'p1',
+      'children': [
+        {
+          'name':'c1'
+        },
+        {
+          'name':'c2',
+          'children': [
+            {
+              'name':'r1'
+            }
+          ]
+        }
+      ]
+    };
+
+    let tree = new Tree({data: data});
+
+    tree.expand();
+
+    expect(tree.data).to.deep.match({
+      'name': 'p1',
+      'children': [
+        {
+          'name':'c1'
+        },
+        {
+          'name':'c2',
+          'children': [
+            {
+              'name':'r1'
+            },
+            {
+              'name':'c2'
+            }
+          ]
+        },
+        {
+          'name': 'p1'
+        }
+      ]
+    });
+  });
+
 });

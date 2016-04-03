@@ -6,7 +6,12 @@ d3.json('../dat/dat.json', (err, data) => {
     return console.error(err);
   }
 
-  let tree = new Tree({data: data});
+  let config = {
+    data: data,
+    singleLayer: true
+  };
+
+  let tree = new Tree(config);
 
   tree.init();
 

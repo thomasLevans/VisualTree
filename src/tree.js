@@ -1,10 +1,6 @@
 import d3 from 'd3';
 
-const DEF_PROPS = {
-  data: new Map(),
-  elem: 'body',
-  diameter: 750
-};
+import DEF_CONFIG from './config.js';
 
 /**
 * Tree class encapsulating the state and behavior of
@@ -21,16 +17,18 @@ export default class Tree {
   * @constructor
   * @param {Object} config - values for initial tree state
   */
-  constructor(config = DEF_PROPS) {
-    this.data = config.data || DEF_PROPS.data;
-    this.elem = config.elem || DEF_PROPS.elem;
-    this.diameter = config.diameter || DEF_PROPS.diameter;
+  constructor(config = DEF_CONFIG) {
+    this.data = config.data || DEF_CONFIG.data;
+    this.elem = config.elem || DEF_CONFIG.elem;
+    this.diameter = config.diameter || DEF_CONFIG.diameter;
+    this.singleLayer = config.singleLayer || DEF_CONFIG.singleLayer;
 
-    this.visual = d3.layout.tree()
+    this.visual = d3.layout.cluster()
       .size([360, this.diameter / 2 - 150])
-      .separation(function(a, b) {
-        return (a.parent == b.parent ? 1 : 2) / a.depth;
-      });
+      .sort(null);
+      // .separation(function(a, b) {
+      //   return (a.parent == b.parent ? 1 : 2) / a.depth;
+      // });
 
     this.diagonal = d3.svg.diagonal.radial()
       .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
@@ -58,8 +56,17 @@ export default class Tree {
   * @method
   */
   propagateUpdate() {
+
+    if (this.singleLayer) {
+      this.expand();
+    }
+
     this.nodes = this.visual.nodes(this.data);
     this.links = this.visual.links(this.nodes);
+
+    this.nodes = (this.singleLayer) ? this.nodes.filter((d) => { return !d.children; }) : this.nodes;
+
+    console.log(this.nodes);
 
     this.link = this.svg.selectAll('.link')
         .data(this.links)
@@ -68,6 +75,7 @@ export default class Tree {
         .attr('d', this.diagonal);
 
     this.node = this.svg.selectAll('.node')
+        // .data(this.nodes.filter((d) => { return !d.children; }))
         .data(this.nodes)
       .enter().append('g')
         .attr('class', 'node')
@@ -102,6 +110,29 @@ export default class Tree {
     else {
       // TODO : LOJ
     }
+  }
+
+  /**
+  * Expands the tree by migrating all branches to leaves
+  *
+  * @method expand
+  */
+  expand() {
+
+    let next = (node) => {
+
+      if (node.children) {
+        node.children.push({ name: node.name });
+
+        node.children.forEach((c) => {
+          next(c);
+        });
+      }
+
+    };
+
+    next(this.data);
+
   }
 
 }
