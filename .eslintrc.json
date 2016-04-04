@@ -29,6 +29,9 @@
         "no-console": ["error", { "allow": ["warn", "error"] }],
         "no-undef": [
             "warn"
+        ],
+        "no-warning-comments": [
+            "warn"
         ]
     }
 }

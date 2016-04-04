@@ -132,7 +132,18 @@ export default class Tree {
     };
 
     next(this.data);
+  }
 
+  /**
+  * Merges the current tree data with args, assumes args is a
+  * map representing the root node down
+  *
+  * @method merge
+  * @param {Map} args - an updated map of the root node
+  */
+  merge(args) {
+    /* TODO : recursively walk the tree and diff objects, replacing
+     previous with next */
   }
 
 }

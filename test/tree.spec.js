@@ -100,4 +100,47 @@ describe('tree', () => {
     });
   });
 
+  it('can merge updated data into an existing tree', () => {
+    let initialData = {
+      'name': 'p',
+      'children': [
+        {
+          'name': 'b'
+        },
+        {
+          'name': 'c'
+        }
+      ]
+    };
+
+    let tree = new Tree({data: initialData});
+    expect(tree.data).to.deep.match(initialData);
+
+    let updatedData = {
+      'name': 'p',
+      'children': [
+        {
+          'name': 'b',
+          'children': [
+            {
+              'name': 'e'
+            }
+          ]
+        },
+        {
+          'name': 'c',
+          'children': [
+            {
+              'name': 'f'
+            }
+          ]
+        }
+      ]
+    };
+
+    let final = tree.merge(updatedData);
+
+    expect(tree.data).to.deep.match(updatedData);
+  });
+
 });
