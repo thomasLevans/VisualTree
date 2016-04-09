@@ -138,9 +138,10 @@ describe('tree', () => {
       ]
     };
 
-    let final = tree.merge(updatedData);
+    tree.merge(updatedData);
 
     expect(tree.data).to.deep.match(updatedData);
   });
+
 
 });
