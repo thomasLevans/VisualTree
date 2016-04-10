@@ -18,10 +18,15 @@ export default class Tree {
   * @param {Object} config - values for initial tree state
   */
   constructor(config = DEF_CONFIG) {
-    this.data = config.data || DEF_CONFIG.data;
-    this.elem = config.elem || DEF_CONFIG.elem;
-    this.diameter = config.diameter || DEF_CONFIG.diameter;
-    this.singleLayer = config.singleLayer || DEF_CONFIG.singleLayer;
+    this.elem = config.elem;
+    this.diameter = config.diameter;
+    this.singleLayer = config.singleLayer;
+
+    if (config.data.size > 0) {
+      this.data = this._translateAdjList(config.data);
+    } else {
+      this.data = config.data;
+    }
 
     this.visual = d3.layout.cluster()
       .size([360, this.diameter / 2 - 150])
@@ -66,8 +71,6 @@ export default class Tree {
 
     this.nodes = (this.singleLayer) ? this.nodes.filter((d) => { return !d.children; }) : this.nodes;
 
-    console.log(this.nodes);
-
     this.link = this.svg.selectAll('.link')
         .data(this.links)
       .enter().append('path')
@@ -96,20 +99,33 @@ export default class Tree {
   }
 
   /**
-  * Takes a map if objects and their children and either
-  * assigns the map as this tree's data if none or performs
-  * a merges the two maps as args U (args n tree.data)
+  * Merges the contents of args onto the tree as appropriate
+  * If the tree is not empty the target subtree is inserted
+  * overwriting the subtree where below the target
   *
-  * @method push
-  * @param {Map} args - nested map of node names and children
+  * @method merge
+  * @param {Map} args - adjacency list in the form of a hashmap
   */
-  push(args) {
+  merge(args) {
+    let target = this._translateAdjList(args);
+
+    let find = (node) => {
+      if (node.name !== target.name) {
+        node.children.forEach((child) => {
+          find(child);
+        });
+      } else {
+        node.children = target.children;
+      }
+    };
+
     if(this.data.size === 0) {
-      this.data = args;
+      this.data = target;
     }
     else {
-      // TODO : LOJ
+      find(this.data);
     }
+
   }
 
   /**
@@ -133,6 +149,51 @@ export default class Tree {
 
     next(this.data);
 
+  }
+
+  /**
+  * Translates an adjacency list into a di-graph
+  *
+  * @method
+  * @param {Map} list - an adjacency list
+  */
+  _translateAdjList(list) {
+    let graph = new Map();
+    let subTrees = [];
+
+    let getChildren = (args) => {
+      if(args) {
+        return args.map((c) => {
+          let cur = list.get(c);
+          list.delete(c);
+          return {
+            name: c,
+            children: getChildren(cur)
+          };
+        });
+      } else {
+        return [];
+      }
+    };
+
+    // derive all subtrees
+    for (let [key, val] of list) {
+      subTrees.push({
+        name: key,
+        children: getChildren(val)
+      });
+    }
+
+    // if their are multiple subtrees return the prime subtree
+    if (subTrees.length > 1) {
+      graph = subTrees.filter((prev, elem) => {
+        return (prev.children.indexOf(elem) !== -1) ? prev : elem;
+      }).pop();
+    } else {
+      graph = subTrees.pop();
+    }
+
+    return graph;
   }
 
 }

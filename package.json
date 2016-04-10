@@ -1,13 +1,12 @@
 {
   "name": "visual_tree",
-  "version": "0.0.25",
+  "version": "0.0.5",
   "description": "A visual tree generator",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
     "test:watch": "npm test -- --watch",
-    "gen:docs": "mr-doc -s src/ -o docs/ -n \"VisualTree\"",
-    "deps:check": "nsp check",
+    "deps": "nsp check",
     "lint": "eslint ./src/*.js",
     "wp:dev": "webpack-dev-server --progress --colors",
     "wp:deploy": "webpack -p --progress --colors"
