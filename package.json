@@ -2,15 +2,15 @@
   "name": "visual_tree",
   "version": "0.0.5",
   "description": "A visual tree generator",
-  "main": "index.js",
+  "main": "tree.min.js",
   "scripts": {
     "test": "mocha",
     "test:watch": "npm test -- --watch",
     "cover": "babel-node node_modules/.bin/istanbul cover mocha",
     "deps": "nsp check",
     "lint": "eslint ./src/*.js",
-    "wp:dev": "webpack-dev-server --progress --colors",
-    "wp:deploy": "webpack -p --progress --colors"
+    "demo:dev": "webpack-dev-server --progress --colors",
+    "demo:deploy": "webpack -p --progress --colors"
   },
   "author": "thomasLevans",
   "repository": {
