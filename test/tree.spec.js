@@ -5,6 +5,25 @@ import Tree from '../src/tree';
 describe('tree', () => {
 
   describe('can be instantiated', () => {
+    // FIXME - unify this const and pull to top
+    const EXPECTED = {
+      name: 'x',
+      children: [
+        {
+          name: 'y',
+          children: [
+            {
+              name: 'w',
+              children: []
+            }
+          ]
+        },
+        {
+          name: 'z',
+          children: []
+        }
+      ]
+    };
 
     it('as an empty tree', () => {
       let t = new Tree();
@@ -30,6 +49,28 @@ describe('tree', () => {
       expect(t.elem).to.equal('vis');
       expect(t.data.size).to.equal(0);
       expect(t.diameter).to.equal(660);
+    });
+
+    it('with an es6 map', () => {
+      let config = {
+        data: new Map([
+          ['x', ['y','z']],
+          ['y', ['w']]
+        ])
+      };
+
+      let t = new Tree(config);
+      expect(t.data).to.deep.match(EXPECTED);
+    });
+
+    it('with a multidimensional array', () => {
+      let data = [
+        ['x', ['y','z']],
+        ['y', ['w']]
+      ];
+
+      let t = new Tree({ data: data });
+      expect(t.data).to.deep.match(EXPECTED);
     });
 
   });
@@ -84,22 +125,10 @@ describe('tree', () => {
   });
 
   it('can expand by making all named nodes leaves', () => {
-    let data = {
-      'name': 'p1',
-      'children': [
-        {
-          'name':'c1'
-        },
-        {
-          'name':'c2',
-          'children': [
-            {
-              'name':'r1'
-            }
-          ]
-        }
-      ]
-    };
+    let data = new Map([
+      ['p1', ['c1','c2']],
+      ['c2', ['r1']]
+    ]);
 
     let tree = new Tree({data: data});
 

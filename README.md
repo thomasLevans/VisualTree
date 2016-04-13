@@ -39,28 +39,28 @@ When passing a config to the constructor you can omit any of the properties in f
 __Note:__ If no data is passed in the config you can use `tree.push(myData)`
 
 ## Data
-An adjacency list in the form of a hashmap. Leaves __do not__ need to be explicit.
+An adjacency list in the form of a multidimensional array. Leaves __do not__ need to be explicit.
 
 ### Leaves Implicit
 ```
-{
-  'q': ['r','d','z'],
-  'r': ['a','b'],
-  'a': ['1'],
-  'z': ['g','u']
-}
+[
+  ['q', ['r','d','z']],
+  ['r', ['a','b']],
+  ['a', ['1']],
+  ['z', ['g','u']]
+]
 ```
 ### Leaves Explicit
 ```
-{
-  'q': ['r','d','z'],
-  'r': ['a','b'],
-  'd': [],
-  'a': ['1'],
-  'z': ['g','u'],
-  'b': [],
-  '1': [],
-  'g': [],
-  'u': []
-}
+[
+  ['q', ['r','d','z']],
+  ['r', ['a','b']],
+  ['d', []],
+  ['a', ['1']],
+  ['z', ['g','u']],
+  ['b', []],
+  ['1', []],
+  ['g', []],
+  ['u', []]
+]
 ```

@@ -18,22 +18,22 @@ export default class Tree {
   * @param {Object} config - values for initial tree state
   */
   constructor(config = DEF_CONFIG) {
-    this.elem = config.elem;
-    this.diameter = config.diameter;
-    this.singleLayer = config.singleLayer;
+    this.data = config.data || DEF_CONFIG.data;
+    this.elem = config.elem || DEF_CONFIG.elem;
+    this.diameter = config.diameter || DEF_CONFIG.diameter;
+    this.singleLayer = config.singleLayer || DEF_CONFIG.singleLayer;
 
-    if (config.data.size > 0) {
-      this.data = this._translateAdjList(config.data);
-    } else {
-      this.data = config.data;
+    if(this.data.length) {
+      this.data = new Map(this.data);
+    }
+
+    if (this.data.size !== 0) {
+      this.data = this._translateAdjList(this.data);
     }
 
     this.visual = d3.layout.cluster()
       .size([360, this.diameter / 2 - 150])
       .sort(null);
-      // .separation(function(a, b) {
-      //   return (a.parent == b.parent ? 1 : 2) / a.depth;
-      // });
 
     this.diagonal = d3.svg.diagonal.radial()
       .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
