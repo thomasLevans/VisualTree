@@ -37,7 +37,7 @@ gulp.task('secure', function(cb) {
 });
 
 gulp.task('lint', function() {
-  return gulp.src(['**/*.js','!node_modules/**', '!dist/**'])
+  return gulp.src(['**/*.js','!node_modules/**','!dist/**','!coverage/**'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());

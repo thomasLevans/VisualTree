@@ -6,8 +6,9 @@
   "scripts": {
     "test": "mocha",
     "test:watch": "npm test -- --watch",
-    "cover": "babel-node node_modules/.bin/istanbul cover mocha",
+    "cover": "babel-node node_modules/.bin/istanbul cover _mocha",
     "deps": "nsp check",
+    "build": "babel-node node_modules/.bin/gulp",
     "lint": "eslint ./src/*.js",
     "demo:dev": "webpack-dev-server --progress --colors",
     "demo:deploy": "webpack -p --progress --colors"
@@ -28,9 +29,11 @@
     "eslint": "^2.6.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.0.0",
+    "gulp-istanbul": "^0.10.4",
     "gulp-nsp": "^2.4.0",
     "gulp-spawn-mocha": "^2.2.2",
     "istanbul": "^1.0.0-alpha.2",
+    "jsdom": "^8.3.1",
     "mocha": "^2.4.5",
     "nsp": "^2.3.0",
     "webpack": "^1.12.14",
