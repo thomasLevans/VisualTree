@@ -38,14 +38,6 @@ export default class Tree {
     this.diagonal = d3.svg.diagonal.radial()
       .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-  }
-
-  /**
-  * Initializes the SVG
-  *
-  * @method
-  */
-  init() {
     this.svg = d3.select(this.elem)
       .append('svg')
         .attr('width', this.diameter)
@@ -74,14 +66,14 @@ export default class Tree {
     this.link = this.svg.selectAll('.link')
         .data(this.links)
       .enter().append('path')
-        .attr('class', 'link')
+        .attr('class', 'edge')
         .attr('d', this.diagonal);
 
     this.node = this.svg.selectAll('.node')
         // .data(this.nodes.filter((d) => { return !d.children; }))
         .data(this.nodes)
       .enter().append('g')
-        .attr('class', 'node')
+        .attr('class', 'vertex')
         .attr('transform', function(d) {
           return 'rotate(' + (d.x - 90) + ')translate(' + d.y + ')';
         });

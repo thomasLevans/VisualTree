@@ -13,7 +13,5 @@ d3.json('../dat/adj_list.json', (err, data) => {
 
   let tree = new Tree(config);
 
-  tree.init();
-
   tree.propagateUpdate();
 });

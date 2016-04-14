@@ -1,6 +1,7 @@
 import {expect} from 'chai';
+import d3 from 'd3';
 
-import Tree from '../src/tree';
+import Tree from '../../src/tree';
 
 describe('tree', () => {
 
@@ -122,6 +123,11 @@ describe('tree', () => {
       expect(t.data).to.deep.match(EXPECTED);
     });
 
+    afterEach(() => {
+      d3.selectAll('svg')
+        .remove();
+    });
+
   });
 
   it('can expand by making all named nodes leaves', () => {
@@ -209,5 +215,44 @@ describe('tree', () => {
 
       expect(tree._translateAdjList(list)).to.deep.match(EXPECTED);
     });
+
+    afterEach(() => {
+      d3.selectAll('svg')
+        .remove();
+    });
+
   });
+
+  describe('can render', () => {
+    let t;
+
+    before(() => {
+      let data = [
+        ['q', ['r','u','z']],
+        ['r', ['d','c']],
+        ['u', ['i']]
+      ];
+
+      t = new Tree({ data: data });
+      t.propagateUpdate();
+    });
+
+
+    it('a path for every edge', () => {
+      let edgeCount = d3.selectAll('.edge')[0].length;
+      expect(edgeCount).to.equal(6);
+    });
+
+    it('each vertex', () => {
+      let vertexCount = d3.selectAll('.vertex')[0].length;
+      expect(vertexCount).to.equal(7);
+    });
+
+    after(() => {
+      d3.selectAll('svg')
+        .remove();
+    });
+
+  });
+
 });

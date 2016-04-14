@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 
-import DEF_CONFIG from '../src/config';
+import DEF_CONFIG from '../../src/config';
 
 describe('default config', () => {
 
