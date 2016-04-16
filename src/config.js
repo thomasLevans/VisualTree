@@ -1,5 +1,5 @@
 export default {
-  data: new Map(),
+  adjList: new Map(),
   elem: 'body',
   diameter: 750,
   singleLayer: false

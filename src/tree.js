@@ -18,10 +18,11 @@ export default class Tree {
   * @param {Object} config - values for initial tree state
   */
   constructor(config = DEF_CONFIG) {
-    this.data = config.data || DEF_CONFIG.data;
+    this.data = config.adjList || DEF_CONFIG.adjList;
     this.elem = config.elem || DEF_CONFIG.elem;
     this.diameter = config.diameter || DEF_CONFIG.diameter;
     this.singleLayer = config.singleLayer || DEF_CONFIG.singleLayer;
+    this.hashmap = config.hashmap;
 
     if(this.data.length) {
       this.data = new Map(this.data);
@@ -63,14 +64,13 @@ export default class Tree {
 
     this.nodes = (this.singleLayer) ? this.nodes.filter((d) => { return !d.children; }) : this.nodes;
 
-    this.link = this.svg.selectAll('.link')
+    this.link = this.svg.selectAll('.edge')
         .data(this.links)
       .enter().append('path')
         .attr('class', 'edge')
         .attr('d', this.diagonal);
 
-    this.node = this.svg.selectAll('.node')
-        // .data(this.nodes.filter((d) => { return !d.children; }))
+    this.node = this.svg.selectAll('.vertex')
         .data(this.nodes)
       .enter().append('g')
         .attr('class', 'vertex')
@@ -79,7 +79,9 @@ export default class Tree {
         });
 
     this.node.append('circle')
-      .attr('r', 4.5);
+      .attr('r', function(d) {
+        return (this.hashmap) ? this.hashmap[d.name].value : 4.5;
+      });
 
     this.node.append('text')
       .attr('dy', '.31em')
@@ -149,29 +151,30 @@ export default class Tree {
   * @method
   * @param {Map} list - an adjacency list
   */
-  _translateAdjList(list) {
+  _translateAdjList(list, keyFunc = (d) => { return d; }) {
     let graph = new Map();
     let subTrees = [];
 
     let getChildren = (args) => {
-      if(args) {
+      if(!args) {
+        return [];
+      } else {
         return args.map((c) => {
           let cur = list.get(c);
+
           list.delete(c);
           return {
-            name: c,
+            name: keyFunc(c),
             children: getChildren(cur)
           };
         });
-      } else {
-        return [];
       }
     };
 
     // derive all subtrees
     for (let [key, val] of list) {
       subTrees.push({
-        name: key,
+        name: keyFunc(key),
         children: getChildren(val)
       });
     }

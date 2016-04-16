@@ -7,8 +7,7 @@ d3.json('../dat/adj_list.json', (err, data) => {
   }
 
   let config = {
-    data: data,
-    singleLayer: false
+    adjList: data
   };
 
   let tree = new Tree(config);
