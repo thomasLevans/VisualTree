@@ -4,9 +4,9 @@ import DEF_CONFIG from '../../src/config';
 
 describe('default config', () => {
 
-  it('has property `data` with type map', () => {
-    expect(DEF_CONFIG).to.have.property('data');
-    expect(DEF_CONFIG.data).to.be.a('map');
+  it('has property `adjList` with type `map`', () => {
+    expect(DEF_CONFIG).to.have.property('adjList');
+    expect(DEF_CONFIG.adjList).to.be.a('map');
   });
 
   it('has property `elem` with type string', () => {

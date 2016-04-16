@@ -7,7 +7,7 @@ A tree structure visualization package using [D3.js](https://d3js.org/) for quic
 ## Basic Usage
 Instantiate a tree with default properties and some data.
 ```
-var tree = new Tree({data: myData});
+var tree = new Tree({adjList: myData});
 
 // no DOM element specified default appends to <body>
 tree.init();
@@ -22,7 +22,7 @@ __Note:__ See the config object section for details on what can be passed to the
 The default config looks like:
 ```
 {
-  data: new Map(),
+  adjList: new Map(),
   elem: 'body',
   diameter: 750,
   singleLayer: false
@@ -31,7 +31,7 @@ The default config looks like:
 When passing a config to the constructor you can omit any of the properties in favor of the defaults.
 
 ### Config Properties
-- data -> The root node of the tree, see __Data__ for expected structure.
+- adjList -> The adjacency list describing the tree, see __Data__ for expected structure.
 - elem -> The DOM element to append the scalable vector graphic to.
 - diameter -> The size of the circle the radial tree will occupy.
 - singleLayer -> When true a leaf alias is created for every branch node and branch nodes will not be displayed.
@@ -64,3 +64,26 @@ An adjacency list in the form of a multidimensional array. Leaves __do not__ nee
   ['u', []]
 ]
 ```
+
+## Object Support
+Additionally you can pass a hashmap of objects for displaying complex data:
+```
+var adjList = [
+  ['q', ['r','d']]
+];
+var hashmap = {
+  'q': { alias:'que', value:22 },
+  'r': { alias:'rue', value:99 },
+  'd': { alias:'del', value:73 }
+};
+
+var config = {
+  adjList: adjList,
+  hashmap: hashmap
+};
+
+var tree = new Tree(config);
+...
+```
+Currently the `value` field of a given hashmap entry will be used as the vertex radius if a hashmap is passed to the tree.
+_This is super basic and will be more functional in the future_

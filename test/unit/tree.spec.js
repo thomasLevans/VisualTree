@@ -6,7 +6,6 @@ import Tree from '../../src/tree';
 describe('tree', () => {
 
   describe('can be instantiated', () => {
-    // FIXME - unify this const and pull to top
     const EXPECTED = {
       name: 'x',
       children: [
@@ -54,7 +53,7 @@ describe('tree', () => {
 
     it('with an es6 map', () => {
       let config = {
-        data: new Map([
+        adjList: new Map([
           ['x', ['y','z']],
           ['y', ['w']]
         ])
@@ -65,12 +64,12 @@ describe('tree', () => {
     });
 
     it('with a multidimensional array', () => {
-      let data = [
+      let adjList = [
         ['x', ['y','z']],
         ['y', ['w']]
       ];
 
-      let t = new Tree({ data: data });
+      let t = new Tree({ adjList: adjList });
       expect(t.data).to.deep.match(EXPECTED);
     });
 
@@ -113,7 +112,7 @@ describe('tree', () => {
     it('into a non-empty tree', () => {
       let partial = new Map()
         .set('parent', ['child1', 'child2']);
-      let t = new Tree({ data: partial });
+      let t = new Tree({ adjList: partial });
 
       partial = new Map()
         .set('child2', ['grandchild1']);
@@ -130,38 +129,106 @@ describe('tree', () => {
 
   });
 
-  it('can expand by making all named nodes leaves', () => {
-    let data = new Map([
-      ['p1', ['c1','c2']],
-      ['c2', ['r1']]
-    ]);
-
-    let tree = new Tree({data: data});
-
-    tree.expand();
-
-    expect(tree.data).to.deep.match({
-      'name': 'p1',
-      'children': [
+  describe('can be configured', () => {
+    const EXPECTED = {
+      name: 'q',
+      children: [
         {
-          'name':'c1'
+          name: 'z',
+          children: []
         },
         {
-          'name':'c2',
-          'children': [
+          name: 'u',
+          children: [
             {
-              'name':'r1'
-            },
-            {
-              'name':'c2'
+              name: 'i',
+              children: []
             }
           ]
         },
         {
-          'name': 'p1'
+          name: 'r',
+          children: [
+            {
+              name: 'd',
+              children: []
+            },
+            {
+              name: 'c',
+              children: []
+            }
+          ]
         }
       ]
+    };
+
+    it('to expand by making all named nodes leaves', () => {
+      let adjList = new Map([
+        ['p1', ['c1','c2']],
+        ['c2', ['r1']]
+      ]);
+
+      let tree = new Tree({adjList: adjList});
+
+      tree.expand();
+
+      expect(tree.data).to.deep.match({
+        'name': 'p1',
+        'children': [
+          {
+            'name':'c1'
+          },
+          {
+            'name':'c2',
+            'children': [
+              {
+                'name':'r1'
+              },
+              {
+                'name':'c2'
+              }
+            ]
+          },
+          {
+            'name': 'p1'
+          }
+        ]
+      });
     });
+
+    it('as a representative tree', () => {
+      let adjList = new Map([
+        ['q', ['r','u','z']],
+        ['r', ['d','c']],
+        ['u', ['i']]
+      ]);
+
+      let hashmap = new Map([
+        ['q', { alias:'q', value:12 }],
+        ['r', { alias:'r', value:7 }],
+        ['u', { alias:'u', value:9 }],
+        ['z', { alias:'z', value:14 }],
+        ['d', { alias:'d', value:43 }],
+        ['c', { alias:'c', value:3 }],
+        ['i', { alias:'i', value:8 }]
+      ]);
+
+      let config = {
+        adjList:adjList,
+        hashmap: hashmap
+      };
+
+      let tree = new Tree(config);
+
+      expect(tree.data).to.deep.match(EXPECTED);
+      expect(tree.hashmap).to.not.be.undefined;
+    });
+
+    after(() => {
+      d3.selectAll('svg')
+        .remove();
+    });
+
   });
 
   describe('can translate an adjacency list', () => {
@@ -227,13 +294,28 @@ describe('tree', () => {
     let t;
 
     before(() => {
-      let data = [
+      let adjList = [
         ['q', ['r','u','z']],
         ['r', ['d','c']],
         ['u', ['i']]
       ];
 
-      t = new Tree({ data: data });
+      let hashmap = new Map([
+        ['q', { alias:'que', value:10 }],
+        ['r', { alias:'roc', value:7 }],
+        ['u', { alias:'ui', value:9 }],
+        ['z', { alias:'zed', value:13 }],
+        ['d', { alias:'der', value:4 }],
+        ['c', { alias:'cen', value:3 }],
+        ['i', { alias:'il', value:8 }]
+      ]);
+
+      let config = {
+        adjList:adjList,
+        hashmap: hashmap
+      };
+
+      t = new Tree(config);
       t.propagateUpdate();
     });
 
