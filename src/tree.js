@@ -71,7 +71,7 @@ export default class Tree {
         .attr('d', this.diagonal);
 
     this.node = this.svg.selectAll('.vertex')
-        .data(this.nodes)
+        .data(this.nodes.filter((d) => { return !d.children; }))
       .enter().append('g')
         .attr('class', 'vertex')
         .attr('transform', function(d) {
